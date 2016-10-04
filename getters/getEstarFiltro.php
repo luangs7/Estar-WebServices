@@ -30,15 +30,16 @@ try{
                 $sql = "ORDER BY distancia";
                 break;
             case 1: 
-                $sql = "WHERE ( CASE  WHEN (Estar.horas < (TIMESTAMPDIFF(MINUTE, Estar.inicio, ".$date.")))THEN 1  ELSE 0 END) = 0 ORDER BY distancia";
+                $sql = "AND ( CASE  WHEN (Estar.horas < (TIMESTAMPDIFF(MINUTE, Estar.inicio, ".$date.")))THEN 1  ELSE 0 END) = 0 ORDER BY distancia";
                 break;
             case 2:
-                $sql = "WHERE ( CASE  WHEN (Estar.horas < (TIMESTAMPDIFF(MINUTE, Estar.inicio, ".$date.")))THEN 1  ELSE 0 END) = 1 ORDER BY distancia";
+                $sql = "AND ( CASE  WHEN (Estar.horas < (TIMESTAMPDIFF(MINUTE, Estar.inicio, ".$date.")))THEN 1  ELSE 0 END) = 1 ORDER BY distancia";
                 break;
             case 3:
                 $sql = "ORDER BY distancia, Estar.inicio";
+                break;
             default:
-                $sql = "ORDER BY distancia;"
+                $sql = "ORDER BY distancia";
                 break;
         }
 
@@ -46,7 +47,9 @@ try{
             (TIMESTAMPDIFF( MINUTE , Estar.inicio,  ?)) as diff,
                        (SELECT (CASE WHEN (Estar.horas < diff) THEN 1 ELSE 0 END)) as vencido
             (6372*acos(CAST(cos(radians(?))*cos(radians(Estar.latitude))*cos(radians(Estar.longitude)-radians(?))+sin(radians(?))*sin(radians(Estar.latitude)) AS decimal(16,15)))) AS distancia
-                FROM `Estar` ? "; 
+                FROM `Estar`
+                (6372*acos(CAST(cos(radians(?))*cos(radians(Estar.latitude))*cos(radians(Estar.longitude)-radians(?))+sin(radians(?))*sin(radians(Estar.latitude)) AS decimal(16,15)))) < 1
+                 " .$sql; 
 
     $go = $pdo->prepare($Query); 
     $go->bindParam(1,$date);
@@ -54,6 +57,9 @@ try{
     $go->bindParam(3,$longitude);
     $go->bindParam(4,$latitude);
     $go->bindParam(5,$sql);
+    $go->bindParam(6,$latitude);
+    $go->bindParam(7,$longitude);
+    $go->bindParam(8,$latitude);
     $go->execute();
     $results = $go->fetchAll(PDO::FETCH_ASSOC);
 
