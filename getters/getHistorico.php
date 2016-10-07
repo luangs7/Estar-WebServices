@@ -17,16 +17,19 @@ try{
       FROM `Estar` WHERE Usuario_id = ? ORDER BY idEstar DESC"; 
 
     $go = $pdo->prepare($Query); 
-    $go->bindParam(1,$idUser);
+    $go->bindParam(1,$date);
+    $go->bindParam(2,$idUser);
     $go->execute();
     $results = $go->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($results as $row) {
         if($row['diff'] >= 24){
             $row['days'] = $row['diff'] / 24;
+            $row['hours'] = $row['diff'] % 24;
             $row['days'] = floor($row['days']);
         }else{
             $row['days'] = 0;
+            $row['hours'] = $row['diff'];
         }
         array_push($data, $row);
         $cnt++;

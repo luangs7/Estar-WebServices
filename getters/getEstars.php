@@ -22,7 +22,7 @@ try{
 
      $Query = "SELECT    *,
            (TIMESTAMPDIFF( MINUTE , Estar.inicio,  ?)) as diff,
-           (SELECT (CASE WHEN (Estar.horas < diff) THEN 1 ELSE 0 END)) as vencido
+           (SELECT (CASE WHEN (Estar.horas <= diff) THEN 1 ELSE 0 END)) as vencido
         FROM
             Estar
             ORDER BY  `Estar`.`idEstar` DESC "; 

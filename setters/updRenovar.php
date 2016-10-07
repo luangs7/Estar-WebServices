@@ -67,10 +67,9 @@ function verificaSaldo($id){
     global $pdo;
     global $tempo;
 
-    $Query = "UPDATE `Usuario` SET `saldo`= saldo - ? WHERE `id` = ?";
+    $Query = "UPDATE `Usuario` SET `saldo`= saldo - 1 WHERE `id` = ?";
             $go = $pdo->prepare($Query);
-            $go->bindParam(1, $tempo);
-            $go->bindParam(2, $id);
+            $go->bindParam(1, $id);
             $go->execute();
            }
 ?>

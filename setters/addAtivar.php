@@ -21,6 +21,15 @@ try {
     $address = $_POST['address'];
     $id = $_GET['id'];
 
+    switch ($tempo) {
+        case 1:
+            $tempo = 2;
+            break;
+        case 2:
+            $tempo = 3;
+            break;
+    }
+
 
         if(verificaSaldo($id)){
 
